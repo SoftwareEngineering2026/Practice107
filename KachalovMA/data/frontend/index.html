@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <title>UUID Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 720px;
+            margin: 60px auto;
+            padding: 0 20px;
+            line-height: 1.5;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 24px;
+            padding: 16px;
+            border: 1px solid #ddd;
+            background: #f7f7f7;
+            word-break: break-all;
+            min-height: 24px;
+        }
+    </style>
+</head>
+<body>
+    <h1>UUID Generator</h1>
+    <p>Нажми кнопку, чтобы получить UUID с backend-сервиса.</p>
+
+    <button id="generateButton">Сгенерировать UUID</button>
+
+    <div id="result">UUID появится здесь</div>
+
+    <script>
+        const result = document.getElementById("result");
+        const button = document.getElementById("generateButton");
+
+        button.addEventListener("click", async () => {
+            result.textContent = "Запрос к backend...";
+
+            try {
+                const response = await fetch("http://localhost:8080/api/uuid");
+
+                if (!response.ok) {
+                    throw new Error("HTTP " + response.status);
+                }
+
+                const data = await response.json();
+                result.textContent = data.uuid;
+            } catch (error) {
+                result.textContent = "Ошибка: " + error.message;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+apiVersion: 1
+
+providers:
+  - name: Practice105
+    orgId: 1
+    folder: Practice105
+    type: file
+    disableDeletion: false
+    editable: true
+    options:
+      path: /var/lib/grafana/dashboards

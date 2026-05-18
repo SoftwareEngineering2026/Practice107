@@ -1,0 +1,61 @@
+services:
+  frontend:
+    build: ./frontend
+    container_name: uuid-frontend
+    ports:
+      - "8081:80"
+    depends_on:
+      - backend-wsgi
+
+  backend-wsgi:
+    build: ./backend-wsgi
+    container_name: uuid-backend-wsgi
+    ports:
+      - "8080:8080"
+
+  long-task-processor:
+    build: ./long-task-processor
+    container_name: uuid-long-task-processor
+    restart: unless-stopped
+
+  loki:
+    image: grafana/loki:3.2.1
+    container_name: uuid-loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+
+  prometheus:
+    image: prom/prometheus:v2.55.1
+    container_name: uuid-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      - backend-wsgi
+
+  alloy:
+    image: grafana/alloy:v1.5.1
+    container_name: uuid-alloy
+    command: run /etc/alloy/config.alloy
+    volumes:
+      - ./observability/alloy/config.alloy:/etc/alloy/config.alloy:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - loki
+
+  grafana:
+    image: grafana/grafana:11.3.0
+    container_name: uuid-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - loki
+      - prometheus
