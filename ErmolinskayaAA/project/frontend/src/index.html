@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ SpellCheck Pro | Проверка орфографии</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Анимированный фон -->
+    <div class="bg-shape bg-shape-1"></div>
+    <div class="bg-shape bg-shape-2"></div>
+    <div class="bg-shape bg-shape-3"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-spell-check"></i>
+                <h1>SpellCheck <span class="gradient">Pro</span></h1>
+            </div>
+            <p class="subtitle">Проверка орфографии</p>
+            <div class="badge-group">
+                <div class="badge"><i class="fas fa-bolt"></i> Мгновенная проверка</div>
+                <div class="badge"><i class="fas fa-clock"></i> Асинхронная очередь</div>
+                <div class="badge pro"><i class="fas fa-microchip"></i> Микросервисная архитектура</div>
+            </div>
+        </div>
+
+        <!-- Главная карточка -->
+        <div class="card main-card">
+            <div class="card-header">
+                <i class="fas fa-pen-fancy"></i>
+                <h3>Введите текст для проверки</h3>
+            </div>
+            
+            <textarea id="textInput" placeholder='Например: "Жыла была девочка. Она была очень хорошой и умной..."'></textarea>
+            
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="app.checkSpelling()" id="syncBtn">
+                    <i class="fas fa-search"></i> Проверить орфографию
+                </button>
+                <button class="btn btn-secondary" onclick="app.checkAsync()" id="asyncBtn">
+                    <i class="fas fa-hourglass-half"></i> Длительная проверка
+                </button>
+                <button class="btn btn-outline" onclick="app.clearText()">
+                    <i class="fas fa-trash-alt"></i> Очистить
+                </button>
+                <button class="btn btn-outline" onclick="app.loadExample()">
+                    <i class="fas fa-file-alt"></i> Пример
+                </button>
+            </div>
+
+            <!-- Результаты -->
+            <div id="resultArea"></div>
+        </div>
+
+        <!-- Активные задачи -->
+        <div class="card tasks-card" id="tasksCard" style="display: none;">
+            <div class="card-header">
+                <i class="fas fa-tasks"></i>
+                <h3>Активные задачи</h3>
+                <span class="badge" id="tasksCount">0</span>
+            </div>
+            <div id="tasksList"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
