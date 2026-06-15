@@ -1,0 +1,51 @@
+services:
+
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+
+  worker:
+    build: ./worker
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - backend
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+
+  loki:
+    image: grafana/loki:3.7.2
+    ports:
+      - "3100:3100"
+    command:
+      - -config.file=/etc/loki/loki-config.yml
+    volumes:
+      - ./monitoring/loki-config.yml:/etc/loki/loki-config.yml
+      - loki-data:/tmp/loki
+
+  alloy:
+    image: grafana/alloy
+    command:
+    - run
+    - /etc/alloy/config.alloy
+
+    volumes:
+    - ./monitoring/config.alloy:/etc/alloy/config.alloy
+    - /var/run/docker.sock:/var/run/docker.sock
+
+    depends_on:
+    - loki
+
+volumes:
+  loki-data:

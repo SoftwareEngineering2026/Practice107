@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Text Analyzer</title>
+</head>
+<body>
+
+<h1>Анализ текста</h1>
+
+<textarea id="text" rows="10" cols="60"></textarea>
+
+<br><br>
+
+<button onclick="sendText()">
+    Анализировать
+</button>
+
+<pre id="result"></pre>
+
+<script>
+
+async function sendText() {
+
+    const text =
+        document.getElementById("text").value;
+
+    const response =
+        await fetch("/api/analyze", {
+            method: "POST",
+            headers: {
+                "Content-Type":
+                "application/json"
+            },
+            body: JSON.stringify({
+                text: text
+            })
+        });
+
+    const data =
+        await response.json();
+
+    document.getElementById("result")
+        .innerText =
+        JSON.stringify(data, null, 2);
+}
+
+</script>
+
+</body>
+</html>
